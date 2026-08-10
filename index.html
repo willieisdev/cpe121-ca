@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CPE 121 — C++ Programming CA Test</title>
+<style>
+  /* ── Reset & Base ─────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-dark:  #1B4332;
+    --green-mid:   #52B788;
+    --green-light: #D8F3DC;
+    --green-pale:  #F0F7F2;
+    --amber:       #B45309;
+    --amber-light: #FFF8E7;
+    --red:         #B91C1C;
+    --red-light:   #FEF2F2;
+    --white:       #FFFFFF;
+    --gray-100:    #F5F5F5;
+    --gray-300:    #D1D5DB;
+    --gray-600:    #4B5563;
+    --gray-900:    #111827;
+    --shadow:      0 4px 24px rgba(0,0,0,0.10);
+    --radius:      12px;
+  }
+
+  body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--green-pale);
+    color: var(--gray-900);
+    min-height: 100vh;
+    padding: 24px 16px 48px;
+  }
+
+  /* ── Layout ───────────────────────────────────────────────────── */
+  .container {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: var(--white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 36px 40px;
+    margin-bottom: 24px;
+  }
+
+  /* ── Header ───────────────────────────────────────────────────── */
+  .header {
+    background: var(--green-dark);
+    color: var(--white);
+    border-radius: var(--radius);
+    padding: 28px 40px;
+    margin-bottom: 24px;
+  }
+  .header .dept  { font-size: 13px; color: var(--green-light); margin-bottom: 6px; letter-spacing: .5px; text-transform: uppercase; }
+  .header h1     { font-size: 26px; font-weight: 700; margin-bottom: 4px; }
+  .header .sub   { font-size: 14px; color: var(--green-light); }
+
+  /* ── Timer bar ────────────────────────────────────────────────── */
+  .timer-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--green-dark);
+    color: var(--white);
+    border-radius: 8px;
+    padding: 12px 20px;
+    margin-bottom: 24px;
+    font-size: 15px;
+  }
+  .timer-bar .time { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--green-light); }
+  .timer-bar .strikes { display: flex; align-items: center; gap: 8px; }
+  .strike-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--gray-600); border: 2px solid #555; transition: background .3s; }
+  .strike-dot.active { background: #EF4444; border-color: #EF4444; }
+
+  /* ── Warning banner ───────────────────────────────────────────── */
+  .warning-banner {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    background: var(--amber-light);
+    border: 2px solid var(--amber);
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--amber);
+  }
+  .warning-banner.show { display: flex; }
+  .warning-banner .icon { font-size: 22px; }
+
+  /* ── Disqualified banner ──────────────────────────────────────── */
+  .disq-banner {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    background: var(--red-light);
+    border: 2px solid var(--red);
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin-bottom: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--red);
+  }
+  .disq-banner.show { display: flex; }
+
+  /* ── Student info form ────────────────────────────────────────── */
+  .info-form h2  { font-size: 20px; color: var(--green-dark); margin-bottom: 20px; font-weight: 700; }
+  .field         { margin-bottom: 18px; }
+  .field label   { display: block; font-size: 14px; font-weight: 600; color: var(--gray-600); margin-bottom: 6px; }
+  .field input   { width: 100%; padding: 11px 14px; border: 2px solid var(--gray-300); border-radius: 8px; font-size: 15px; outline: none; transition: border .2s; }
+  .field input:focus { border-color: var(--green-mid); }
+
+  /* ── Questions ────────────────────────────────────────────────── */
+  .question-card { margin-bottom: 28px; }
+  .q-number { font-size: 12px; font-weight: 700; color: var(--green-mid); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 8px; }
+  .q-text   { font-size: 17px; font-weight: 600; color: var(--gray-900); margin-bottom: 16px; line-height: 1.5; }
+  .q-code   { background: #F0F4F0; border: 1px solid #B7DEC8; border-radius: 6px; padding: 12px 16px; font-family: 'Courier New', monospace; font-size: 14px; color: var(--gray-900); margin-bottom: 16px; white-space: pre; overflow-x: auto; }
+  .options  { display: flex; flex-direction: column; gap: 10px; }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border: 2px solid var(--gray-300);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: border .2s, background .2s;
+    font-size: 15px;
+  }
+  .option:hover { border-color: var(--green-mid); background: var(--green-pale); }
+  .option input[type="radio"] { accent-color: var(--green-dark); width: 17px; height: 17px; flex-shrink: 0; }
+  .option.selected { border-color: var(--green-dark); background: var(--green-light); font-weight: 600; }
+
+  /* ── Progress ─────────────────────────────────────────────────── */
+  .progress-row { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
+  .progress-bar { flex: 1; height: 8px; background: var(--gray-300); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--green-mid); border-radius: 99px; transition: width .4s; }
+  .progress-label { font-size: 13px; color: var(--gray-600); white-space: nowrap; }
+
+  /* ── Buttons ──────────────────────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 28px;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity .2s, transform .1s;
+  }
+  .btn:active { transform: scale(.98); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-primary { background: var(--green-dark); color: var(--white); width: 100%; margin-top: 8px; }
+  .btn-primary:hover:not(:disabled) { opacity: .9; }
+  .btn-submit  { background: var(--green-mid); color: var(--white); width: 100%; margin-top: 8px; }
+
+  /* ── Result card ──────────────────────────────────────────────── */
+  .result-card { text-align: center; }
+  .result-icon { font-size: 64px; margin-bottom: 16px; }
+  .result-score { font-size: 52px; font-weight: 800; color: var(--green-dark); }
+  .result-label { font-size: 16px; color: var(--gray-600); margin-bottom: 24px; }
+  .result-grade { display: inline-block; background: var(--green-light); color: var(--green-dark); font-size: 22px; font-weight: 700; padding: 8px 28px; border-radius: 99px; margin-bottom: 28px; }
+  .result-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; margin-bottom: 24px; }
+  .result-table th { background: var(--green-dark); color: var(--white); padding: 10px 14px; }
+  .result-table td { padding: 10px 14px; border-bottom: 1px solid var(--gray-300); }
+  .result-table tr:last-child td { border-bottom: none; }
+  .correct-ans { color: #15803D; font-weight: 600; }
+  .wrong-ans   { color: var(--red); font-weight: 600; }
+  .saving-msg  { font-size: 14px; color: var(--gray-600); margin-top: 12px; }
+
+  /* ── Sections ─────────────────────────────────────────────────── */
+  #section-info   { }
+  #section-test   { display: none; }
+  #section-result { display: none; }
+
+  /* ── Responsive ───────────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    .card { padding: 24px 20px; }
+    .header { padding: 22px 20px; }
+    .timer-bar { padding: 10px 14px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ──────────────────────────────────────────────────────────── -->
+<div class="container">
+  <div class="header">
+    <div class="dept">University of Uyo &nbsp;|&nbsp; Department of Computer Engineering</div>
+    <h1>CPE 121 — C++ Programming</h1>
+    <div class="sub">Continuous Assessment Test &nbsp;|&nbsp; 2025/2026 Academic Session</div>
+  </div>
+
+  <!-- ── WARNING BANNERS ──────────────────────────────────────────────── -->
+  <div class="warning-banner" id="warningBanner">
+    <span class="icon">⚠️</span>
+    <span id="warningText">You left the test tab. This has been recorded.</span>
+  </div>
+  <div class="disq-banner" id="disqBanner">
+    <span class="icon">🚫</span>
+    <span>You have been flagged for excessive tab switching. Your current answers have been submitted automatically.</span>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 1: STUDENT INFO                                           -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <div id="section-info">
+    <div class="card info-form">
+      <h2>Student Information</h2>
+      <p style="font-size:14px;color:var(--gray-600);margin-bottom:24px;">
+        Fill in your details carefully. These cannot be changed once the test begins.
+        The test has <strong>5 questions</strong> and must be completed in
+        <strong>10 minutes</strong>. Do not switch tabs during the test.
+      </p>
+      <div class="field">
+        <label for="inp-name">Full Name</label>
+        <input type="text" id="inp-name" placeholder="e.g. Amara Okafor" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="inp-reg">Registration Number</label>
+        <input type="text" id="inp-reg" placeholder="e.g. CSC/2024/001" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="inp-email">University Email</label>
+        <input type="email" id="inp-email" placeholder="e.g. amara.okafor@uniuyo.edu.ng" autocomplete="off">
+      </div>
+      <button class="btn btn-primary" onclick="startTest()">Begin Test →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 2: TEST                                                   -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <div id="section-test">
+    <!-- Timer + strikes -->
+    <div class="timer-bar">
+      <div>
+        <div style="font-size:11px;color:var(--green-light);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Time Remaining</div>
+        <div class="time" id="timerDisplay">10:00</div>
+      </div>
+      <div class="strikes">
+        <span style="font-size:13px;color:var(--green-light);">Tab switches:</span>
+        <div class="strike-dot" id="s1"></div>
+        <div class="strike-dot" id="s2"></div>
+        <div class="strike-dot" id="s3"></div>
+      </div>
+    </div>
+
+    <!-- Progress -->
+    <div class="progress-row">
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div class="progress-label" id="progressLabel">0 of 5 answered</div>
+    </div>
+
+    <!-- Questions injected here -->
+    <div id="questionsContainer"></div>
+
+    <div class="card" style="padding:24px 40px;">
+      <button class="btn btn-submit" id="submitBtn" onclick="submitTest(false)" disabled>
+        Submit Test
+      </button>
+      <p style="text-align:center;font-size:12px;color:var(--gray-600);margin-top:10px;">
+        Answer all questions before submitting. You cannot go back after submission.
+      </p>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <!-- SECTION 3: RESULT                                                 -->
+  <!-- ══════════════════════════════════════════════════════════════════ -->
+  <div id="section-result">
+    <div class="card result-card">
+      <div class="result-icon" id="resultIcon">🎉</div>
+      <div class="result-score" id="resultScore">0/5</div>
+      <div class="result-label">Questions Correct</div>
+      <div class="result-grade" id="resultGrade">--</div>
+
+      <table class="result-table" id="resultTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Question</th>
+            <th>Your Answer</th>
+            <th>Correct Answer</th>
+          </tr>
+        </thead>
+        <tbody id="resultBody"></tbody>
+      </table>
+
+      <div class="saving-msg" id="savingMsg">⏳ Saving your results...</div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ══════════════════════════════════════════════════════════════════════════
+// CONFIGURATION
+// ══════════════════════════════════════════════════════════════════════════
+
+// Google Sheets Web App URL
+// Replace this after you deploy the Apps Script (instructions in README)
+const SHEET_WEBAPP_URL = "https://script.google.com/macros/s/https://docs.google.com/spreadsheets/d/1gty1qkXc0u3C7XrPPcYejdBMe67RgJrbyuLZDEln2Vo/edit?gid=0#gid=0/exec";
+
+const TOTAL_SECONDS  = 10 * 60;   // 10 minutes
+const MAX_STRIKES    = 3;          // auto-submit after 3 tab switches
+
+// ══════════════════════════════════════════════════════════════════════════
+// QUESTION BANK
+// Each question: { q, code (optional), options: [], answer (0-indexed) }
+// ══════════════════════════════════════════════════════════════════════════
+
+const QUESTION_BANK = [
+  {
+    q: "Which of the following is the correct way to print 'Hello, World!' to the screen in C++?",
+    options: [
+      'printf("Hello, World!");',
+      'cout << "Hello, World!" << endl;',
+      'print("Hello, World!");',
+      'Console.WriteLine("Hello, World!");',
+    ],
+    answer: 1,
+  },
+  {
+    q: "What does the following line do in a C++ program?",
+    code: '#include <iostream>',
+    options: [
+      "Defines the main function",
+      "Loads the standard input/output stream library",
+      "Declares a variable called iostream",
+      "Creates a new file called iostream",
+    ],
+    answer: 1,
+  },
+  {
+    q: "What is the output of the following C++ code?",
+    code: `#include <iostream>
+using namespace std;
+int main() {
+    int x = 10, y = 3;
+    cout << x / y << endl;
+    return 0;
+}`,
+    options: ["3.33", "3", "4", "Compilation error"],
+    answer: 1,
+  },
+  {
+    q: "Which keyword is used to declare a constant variable in C++?",
+    options: ["static", "final", "const", "fixed"],
+    answer: 2,
+  },
+  {
+    q: "What is the correct syntax to declare a string variable in C++?",
+    options: [
+      "String name = \"Amara\";",
+      "string name = \"Amara\";",
+      "str name = \"Amara\";",
+      "text name = \"Amara\";",
+    ],
+    answer: 1,
+  },
+  {
+    q: "What is the value of the expression 17 % 5 in C++?",
+    options: ["3", "2", "1", "0"],
+    answer: 1,
+  },
+  {
+    q: "Which of the following correctly reads an integer from the user in C++?",
+    options: [
+      'scanf("%d", age);',
+      'cin >> age;',
+      'input(age);',
+      'read(age);',
+    ],
+    answer: 1,
+  },
+  {
+    q: "What does 'return 0;' at the end of main() indicate?",
+    options: [
+      "The program returned no output",
+      "The program encountered an error",
+      "The program ended successfully",
+      "The program will restart",
+    ],
+    answer: 2,
+  },
+  {
+    q: "Which data type would you use to store the value 3.14159 in C++?",
+    options: ["int", "char", "bool", "double"],
+    answer: 3,
+  },
+  {
+    q: "What is the output of this code?",
+    code: `#include <iostream>
+using namespace std;
+int main() {
+    bool passed = true;
+    cout << boolalpha << passed << endl;
+    return 0;
+}`,
+    options: ["1", "true", "True", "passed"],
+    answer: 1,
+  },
+];
+
+// ══════════════════════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════════════════════
+
+let student    = {};
+let questions  = [];          // shuffled subset of QUESTION_BANK
+let answers    = {};          // { questionIndex: optionIndex }
+let strikes    = 0;
+let timerSecs  = TOTAL_SECONDS;
+let timerHandle= null;
+let startTime  = null;
+let submitted  = false;
+
+// ══════════════════════════════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════════════════════════════
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function show(id)  { document.getElementById(id).style.display = 'block'; }
+function hide(id)  { document.getElementById(id).style.display = 'none';  }
+
+function formatTime(secs) {
+  const m = String(Math.floor(secs / 60)).padStart(2, '0');
+  const s = String(secs % 60).padStart(2, '0');
+  return `${m}:${s}`;
+}
+
+function updateProgress() {
+  const answered = Object.keys(answers).length;
+  const pct      = (answered / questions.length) * 100;
+  document.getElementById('progressFill').style.width  = pct + '%';
+  document.getElementById('progressLabel').textContent = `${answered} of ${questions.length} answered`;
+  document.getElementById('submitBtn').disabled = answered < questions.length;
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// TAB SWITCH DETECTION
+// ══════════════════════════════════════════════════════════════════════════
+
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden && !submitted && startTime) {
+    strikes++;
+    updateStrikes();
+
+    const warn = document.getElementById('warningBanner');
+    const text = document.getElementById('warningText');
+    text.textContent = `Tab switch detected (${strikes} of ${MAX_STRIKES}). ${
+      strikes < MAX_STRIKES
+        ? `One more switch will auto-submit your test.`
+        : `Your test has been submitted automatically.`
+    }`;
+    warn.classList.add('show');
+    setTimeout(() => warn.classList.remove('show'), 6000);
+
+    if (strikes >= MAX_STRIKES) {
+      document.getElementById('disqBanner').classList.add('show');
+      submitTest(true);
+    }
+  }
+});
+
+function updateStrikes() {
+  for (let i = 1; i <= MAX_STRIKES; i++) {
+    const dot = document.getElementById(`s${i}`);
+    if (dot) dot.classList.toggle('active', i <= strikes);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// TIMER
+// ══════════════════════════════════════════════════════════════════════════
+
+function startTimer() {
+  timerHandle = setInterval(() => {
+    timerSecs--;
+    document.getElementById('timerDisplay').textContent = formatTime(timerSecs);
+    if (timerSecs <= 60) {
+      document.getElementById('timerDisplay').style.color = '#EF4444';
+    }
+    if (timerSecs <= 0) {
+      clearInterval(timerHandle);
+      submitTest(true);
+    }
+  }, 1000);
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// START TEST
+// ══════════════════════════════════════════════════════════════════════════
+
+function startTest() {
+  const name  = document.getElementById('inp-name').value.trim();
+  const reg   = document.getElementById('inp-reg').value.trim();
+  const email = document.getElementById('inp-email').value.trim();
+
+  if (!name || !reg || !email) {
+    alert('Please fill in all fields before starting the test.');
+    return;
+  }
+  if (!email.includes('@')) {
+    alert('Please enter a valid email address.');
+    return;
+  }
+
+  student    = { name, reg, email };
+  startTime  = new Date().toISOString();
+
+  // Pick 5 random questions from the bank and shuffle options
+  questions = shuffle(QUESTION_BANK).slice(0, 5).map(q => {
+    // Shuffle options and track where correct answer moved
+    const indexed = q.options.map((text, i) => ({ text, correct: i === q.answer }));
+    const shuffled = shuffle(indexed);
+    return {
+      q:       q.q,
+      code:    q.code || null,
+      options: shuffled.map(o => o.text),
+      answer:  shuffled.findIndex(o => o.correct),
+    };
+  });
+
+  renderQuestions();
+  hide('section-info');
+  show('section-test');
+  startTimer();
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// RENDER QUESTIONS
+// ══════════════════════════════════════════════════════════════════════════
+
+function renderQuestions() {
+  const container = document.getElementById('questionsContainer');
+  container.innerHTML = '';
+
+  questions.forEach((q, qi) => {
+    const card = document.createElement('div');
+    card.className = 'card question-card';
+    card.id = `qcard-${qi}`;
+
+    let html = `
+      <div class="q-number">Question ${qi + 1} of ${questions.length}</div>
+      <div class="q-text">${q.q}</div>
+    `;
+    if (q.code) {
+      html += `<pre class="q-code">${escapeHtml(q.code)}</pre>`;
+    }
+    html += `<div class="options" id="opts-${qi}">`;
+    q.options.forEach((opt, oi) => {
+      html += `
+        <label class="option" id="opt-${qi}-${oi}">
+          <input type="radio" name="q${qi}" value="${oi}"
+            onchange="selectAnswer(${qi}, ${oi})">
+          <span>${escapeHtml(opt)}</span>
+        </label>
+      `;
+    });
+    html += `</div>`;
+    card.innerHTML = html;
+    container.appendChild(card);
+  });
+}
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function selectAnswer(qi, oi) {
+  answers[qi] = oi;
+  // Update visual selection
+  questions[qi].options.forEach((_, i) => {
+    const el = document.getElementById(`opt-${qi}-${i}`);
+    if (el) el.classList.toggle('selected', i === oi);
+  });
+  updateProgress();
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// SUBMIT
+// ══════════════════════════════════════════════════════════════════════════
+
+function submitTest(auto = false) {
+  if (submitted) return;
+  submitted = true;
+  clearInterval(timerHandle);
+
+  const endTime    = new Date().toISOString();
+  const timeTaken  = TOTAL_SECONDS - timerSecs;   // seconds spent
+  const autoFlag   = auto ? 'Yes' : 'No';
+  const strikeFlag = strikes > 0 ? `Yes (${strikes})` : 'No';
+
+  // Score
+  let correct = 0;
+  questions.forEach((q, qi) => {
+    if (answers[qi] === q.answer) correct++;
+  });
+
+  const pct   = Math.round((correct / questions.length) * 100);
+  const grade = pct >= 70 ? 'A' : pct >= 60 ? 'B' : pct >= 50 ? 'C' : pct >= 45 ? 'D' : 'F';
+
+  // Show result
+  hide('section-test');
+  show('section-result');
+
+  document.getElementById('resultIcon').textContent  = correct === questions.length ? '🎉' : correct >= 3 ? '✅' : '📝';
+  document.getElementById('resultScore').textContent = `${correct}/${questions.length}`;
+  document.getElementById('resultGrade').textContent = `Grade: ${grade} (${pct}%)`;
+
+  // Build answer review table
+  const tbody = document.getElementById('resultBody');
+  questions.forEach((q, qi) => {
+    const studentAns = answers[qi] !== undefined ? q.options[answers[qi]] : '(not answered)';
+    const correctAns = q.options[q.answer];
+    const isCorrect  = answers[qi] === q.answer;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${qi + 1}</td>
+      <td style="font-size:13px">${q.q.substring(0, 60)}...</td>
+      <td class="${isCorrect ? 'correct-ans' : 'wrong-ans'}">${escapeHtml(studentAns)}</td>
+      <td class="correct-ans">${escapeHtml(correctAns)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  // Format time taken
+  const mins = Math.floor(timeTaken / 60);
+  const secs = timeTaken % 60;
+  const timeTakenStr = `${mins}m ${secs}s`;
+
+  // Save to Google Sheets
+  saveToSheet({
+    timestamp:    endTime,
+    name:         student.name,
+    reg:          student.reg,
+    email:        student.email,
+    score:        `${correct}/${questions.length}`,
+    percentage:   pct + '%',
+    grade:        grade,
+    timeTaken:    timeTakenStr,
+    autoSubmit:   autoFlag,
+    tabSwitches:  strikeFlag,
+    startTime:    startTime,
+    endTime:      endTime,
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════════
+// SAVE TO GOOGLE SHEETS
+// ══════════════════════════════════════════════════════════════════════════
+
+async function saveToSheet(data) {
+  const msg = document.getElementById('savingMsg');
+  msg.textContent = '⏳ Saving your results to the server...';
+
+  try {
+    await fetch(SHEET_WEBAPP_URL, {
+      method:  'POST',
+      mode:    'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(data),
+    });
+    msg.textContent = '✅ Results saved successfully. You may close this tab.';
+    msg.style.color = '#15803D';
+  } catch (err) {
+    msg.textContent = '⚠️ Could not save automatically. Please screenshot your result and email it to your lecturer.';
+    msg.style.color = '#B45309';
+    console.error('Save error:', err);
+  }
+}
+</script>
+</body>
+</html>
