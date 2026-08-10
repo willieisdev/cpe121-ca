@@ -152,6 +152,7 @@
 
 <script>
 const WEBAPP_URL  = "https://script.google.com/macros/s/AKfycbz6Y3i2GvlcRzDmtmhcEeYo5y6qowbcdGDb_f89xBnuA4knVsi1UyH8StiCWppKPWb1/exec";
+
 const TOTAL_SECS  = 20 * 60;
 const MAX_STRIKES = 3;
 const Q_PER_TEST  = 20;
@@ -342,11 +343,13 @@ function submitTest(auto=false){
 async function saveResult(data){
   const msg=document.getElementById('savingMsg');
   try{
-    // FormData works reliably with Google Apps Script in no-cors mode.
-    // JSON with Content-Type application/json is blocked by CORS preflight.
-    const form=new FormData();
-    Object.keys(data).forEach(k=>form.append(k,data[k]));
-    await fetch(WEBAPP_URL,{method:'POST',mode:'no-cors',body:form});
+    // GET requests have no CORS preflight issues with Google Apps Script.
+    // We encode all fields as URL parameters and use action=submit.
+    const params=new URLSearchParams();
+    params.append('action','submit');
+    Object.keys(data).forEach(k=>params.append(k,data[k]));
+    const url=`${WEBAPP_URL}?${params.toString()}`;
+    await fetch(url,{method:'GET',mode:'no-cors'});
     msg.textContent='✅ Your result has been saved. You may close this tab.';
     msg.style.color='#15803D';
   }catch(e){
