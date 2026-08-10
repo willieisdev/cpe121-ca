@@ -339,23 +339,19 @@ function submitTest(auto=false){
     tabSwitches:strikes>0?`Yes (${strikes})`:'No',startTime,endTime});
 }
 
-async function saveResult(data) {
-  const msg = document.getElementById('savingMsg');
-  try {
-    const form = new FormData();
-    Object.keys(data).forEach(key => form.append(key, data[key]));
-
-    await fetch(WEBAPP_URL, {
-      method: 'POST',
-      mode:   'no-cors',
-      body:   form,
-    });
-
-    msg.textContent = '✅ Your result has been saved. You may close this tab.';
-    msg.style.color = '#15803D';
-  } catch (e) {
-    msg.textContent = '⚠️ Could not save automatically. Please screenshot this page and email it to your lecturer.';
-    msg.style.color = '#B45309';
+async function saveResult(data){
+  const msg=document.getElementById('savingMsg');
+  try{
+    // FormData works reliably with Google Apps Script in no-cors mode.
+    // JSON with Content-Type application/json is blocked by CORS preflight.
+    const form=new FormData();
+    Object.keys(data).forEach(k=>form.append(k,data[k]));
+    await fetch(WEBAPP_URL,{method:'POST',mode:'no-cors',body:form});
+    msg.textContent='✅ Your result has been saved. You may close this tab.';
+    msg.style.color='#15803D';
+  }catch(e){
+    msg.textContent='⚠️ Could not save automatically. Please screenshot this page and email it to your lecturer.';
+    msg.style.color='#B45309';
   }
 }
 </script>
