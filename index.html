@@ -88,13 +88,122 @@
 
   <!-- SECTION 1: INFO -->
   <div id="section-info">
+
+    <!-- INSTRUCTIONS CARD -->
+    <div class="card">
+      <h2 style="font-size:20px;font-weight:700;color:var(--green-dark);margin-bottom:20px">
+        📋 Test Instructions — Read Before You Begin
+      </h2>
+
+      <!-- Stats row -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
+        <div style="background:var(--green-pale);border:2px solid var(--green-light);border-radius:10px;padding:14px 8px;text-align:center">
+          <div style="font-size:28px;font-weight:800;color:var(--green-dark)">20</div>
+          <div style="font-size:12px;color:var(--gray-600);margin-top:2px">Questions</div>
+        </div>
+        <div style="background:var(--green-pale);border:2px solid var(--green-light);border-radius:10px;padding:14px 8px;text-align:center">
+          <div style="font-size:28px;font-weight:800;color:var(--green-dark)">20</div>
+          <div style="font-size:12px;color:var(--gray-600);margin-top:2px">Marks</div>
+        </div>
+        <div style="background:var(--green-pale);border:2px solid var(--green-light);border-radius:10px;padding:14px 8px;text-align:center">
+          <div style="font-size:28px;font-weight:800;color:var(--green-dark)">20</div>
+          <div style="font-size:12px;color:var(--gray-600);margin-top:2px">Minutes</div>
+        </div>
+        <div style="background:var(--red-light);border:2px solid var(--red);border-radius:10px;padding:14px 8px;text-align:center">
+          <div style="font-size:28px;font-weight:800;color:var(--red)">1</div>
+          <div style="font-size:12px;color:var(--red);margin-top:2px">Attempt Only</div>
+        </div>
+      </div>
+
+      <!-- Section: Format -->
+      <div style="margin-bottom:20px">
+        <div style="font-size:13px;font-weight:700;color:var(--green-dark);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">📝 Test Format</div>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--gray-600);line-height:1.6">
+          <li>✅ <strong>20 questions</strong> are randomly selected for you from a pool of 50. Every student gets a different set.</li>
+          <li>✅ Answer options are also <strong>shuffled randomly</strong> for each student. Copying answers from classmates will not work.</li>
+          <li>✅ Each correct answer earns <strong>1 mark</strong>. There is no negative marking.</li>
+          <li>✅ The timer starts the moment you click <strong>Begin Test</strong> and cannot be paused.</li>
+          <li>✅ The Submit button is only enabled after you have <strong>answered all 20 questions</strong>.</li>
+        </ul>
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--green-light);margin-bottom:20px">
+
+      <!-- Section: Grading -->
+      <div style="margin-bottom:20px">
+        <div style="font-size:13px;font-weight:700;color:var(--green-dark);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">🎓 Grading</div>
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead>
+            <tr style="background:var(--green-dark);color:white">
+              <th style="padding:8px 12px;text-align:left;border-radius:4px 0 0 0">Score</th>
+              <th style="padding:8px 12px;text-align:left">Percentage</th>
+              <th style="padding:8px 12px;text-align:left;border-radius:0 4px 0 0">Grade</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="background:#f9f9f9"><td style="padding:7px 12px;border-bottom:1px solid var(--gray-300)">14 – 20</td><td style="padding:7px 12px;border-bottom:1px solid var(--gray-300)">70% and above</td><td style="padding:7px 12px;border-bottom:1px solid var(--gray-300);font-weight:700;color:var(--green-dark)">A</td></tr>
+            <tr><td style="padding:7px 12px;border-bottom:1px solid var(--gray-300)">12 – 13</td><td style="padding:7px 12px;border-bottom:1px solid var(--gray-300)">60% – 69%</td><td style="padding:7px 12px;border-bottom:1px solid var(--gray-300);font-weight:700;color:var(--green-dark)">B</td></tr>
+            <tr style="background:#f9f9f9"><td style="padding:7px 12px;border-bottom:1px solid var(--gray-300)">10 – 11</td><td style="padding:7px 12px;border-bottom:1px solid var(--gray-300)">50% – 59%</td><td style="padding:7px 12px;border-bottom:1px solid var(--gray-300);font-weight:700;color:var(--green-dark)">C</td></tr>
+            <tr><td style="padding:7px 12px;border-bottom:1px solid var(--gray-300)">9</td><td style="padding:7px 12px;border-bottom:1px solid var(--gray-300)">45% – 49%</td><td style="padding:7px 12px;border-bottom:1px solid var(--gray-300);font-weight:700;color:var(--green-dark)">D</td></tr>
+            <tr style="background:#f9f9f9"><td style="padding:7px 12px">0 – 8</td><td style="padding:7px 12px">Below 45%</td><td style="padding:7px 12px;font-weight:700;color:var(--red)">F</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <hr style="border:none;border-top:1px solid var(--green-light);margin-bottom:20px">
+
+      <!-- Section: Tab switching -->
+      <div style="margin-bottom:20px">
+        <div style="background:var(--amber-light);border:2px solid var(--amber);border-radius:8px;padding:14px 16px">
+          <div style="font-size:13px;font-weight:700;color:var(--amber);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">⚠️ Tab Switching Policy</div>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--gray-900);line-height:1.6">
+            <li>🔴 Every time you switch tabs, open another app, or minimise your browser it is <strong>recorded</strong>.</li>
+            <li>🔴 You are allowed a maximum of <strong>3 tab switches</strong>.</li>
+            <li>🔴 On the <strong>3rd switch</strong> your test is <strong>automatically submitted</strong> with whatever answers you have at that point.</li>
+            <li>🔴 Tab switch counts are reported to your lecturer alongside your score.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Section: One attempt -->
+      <div style="margin-bottom:20px">
+        <div style="background:var(--red-light);border:2px solid var(--red);border-radius:8px;padding:14px 16px">
+          <div style="font-size:13px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">🚫 One Attempt Only — No Exceptions</div>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--gray-900);line-height:1.6">
+            <li>• Once you click <strong>Begin Test</strong> your attempt is used, even if you close the browser.</li>
+            <li>• The system blocks any registration number that has already submitted from starting again.</li>
+            <li>• If you enter the wrong registration number, your result will be saved under that number permanently.</li>
+            <li>• Contact your lecturer <strong>immediately</strong> with a screenshot if you experience a genuine technical failure.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Section: Academic integrity -->
+      <div style="margin-bottom:20px">
+        <div style="font-size:13px;font-weight:700;color:var(--green-dark);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">🎓 Academic Integrity</div>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14px;color:var(--gray-600);line-height:1.6">
+          <li>✅ Complete the test entirely on your own without any assistance.</li>
+          <li>✅ Do not use notes, textbooks, AI tools, or any external resources.</li>
+          <li>✅ Do not share questions or answers with students who have not yet taken the test.</li>
+          <li>🚫 Students found to have violated academic integrity will receive <strong>zero</strong> for the CA and may face further disciplinary action.</li>
+        </ul>
+      </div>
+
+      <!-- Confirmation checkbox -->
+      <div style="background:var(--green-pale);border:2px solid var(--green-mid);border-radius:8px;padding:14px 16px;margin-bottom:0">
+        <label style="display:flex;align-items:flex-start;gap:12px;cursor:pointer;font-size:14px;color:var(--gray-900);line-height:1.6">
+          <input type="checkbox" id="confirmCheck" onchange="toggleStart()" style="width:18px;height:18px;flex-shrink:0;margin-top:2px;accent-color:var(--green-dark)">
+          <span>I have read and understood all the instructions above. I agree to complete this test honestly and under the stated conditions. I understand that clicking <strong>Begin Test</strong> uses my one permitted attempt.</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- STUDENT INFO CARD -->
     <div class="card info-form">
-      <h2>Student Information</h2>
-      <p style="font-size:14px;color:var(--gray-600);margin-bottom:20px;line-height:1.8">
-        Fill in your details carefully. The test has <strong>20 questions</strong> worth
-        <strong>20 marks</strong> and must be completed in <strong>20 minutes</strong>.
-        Switching tabs is recorded and may result in auto-submission.
-        <br><strong style="color:var(--red)">One attempt only. You cannot retake this test.</strong>
+      <h2>Your Details</h2>
+      <p style="font-size:14px;color:var(--gray-600);margin-bottom:20px;line-height:1.7">
+        Enter your information exactly as it appears on your official university records.
+        Double-check your registration number before proceeding.
       </p>
       <div class="checking-box" id="checkingBox">⏳ Verifying your registration number, please wait...</div>
       <div class="blocked-box" id="blockedBox">
@@ -107,7 +216,10 @@
         <input type="text" id="inp-reg" placeholder="e.g. CSC/2024/001" autocomplete="off"></div>
       <div class="field"><label for="inp-email">University Email</label>
         <input type="email" id="inp-email" placeholder="e.g. amara.okafor@uniuyo.edu.ng" autocomplete="off"></div>
-      <button class="btn btn-primary" id="startBtn" onclick="verifyAndStart()">Begin Test →</button>
+      <button class="btn btn-primary" id="startBtn" onclick="verifyAndStart()" disabled
+        style="opacity:.5;cursor:not-allowed">
+        ☑️ Confirm instructions above to enable
+      </button>
     </div>
   </div>
 
@@ -223,6 +335,15 @@ function updateProgress(){
   document.getElementById('progressFill').style.width=(n/Q_PER_TEST*100)+'%';
   document.getElementById('progressLabel').textContent=`${n} of ${Q_PER_TEST} answered`;
   document.getElementById('submitBtn').disabled=n<Q_PER_TEST;
+}
+
+function toggleStart(){
+  const checked=document.getElementById("confirmCheck").checked;
+  const btn=document.getElementById("startBtn");
+  btn.disabled=!checked;
+  btn.style.opacity=checked?"1":"0.5";
+  btn.style.cursor=checked?"pointer":"not-allowed";
+  btn.textContent=checked?"Begin Test u2192":"u2611uFE0F Confirm instructions above to enable";
 }
 
 async function verifyAndStart(){
