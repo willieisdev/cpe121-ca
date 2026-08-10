@@ -151,8 +151,7 @@
 </div>
 
 <script>
-const WEBAPP_URL  = "https://script.google.com/macros/s/AKfycbz6Y3i2GvlcRzDmtmhcEeYo5y6qowbcdGDb_f89xBnuA4knVsi1UyH8StiCWppKPWb1/exec";
-
+const SHEETDB_URL = "https://sheetdb.io/api/v1/8bdf2iah4yr3a";
 const TOTAL_SECS  = 20 * 60;
 const MAX_STRIKES = 3;
 const Q_PER_TEST  = 20;
@@ -239,12 +238,13 @@ async function verifyAndStart(){
   document.getElementById('blockedBox').style.display='none';
 
   try{
-    const resp=await fetch(`${WEBAPP_URL}?action=check&reg=${encodeURIComponent(reg)}`);
+    const resp=await fetch(`${SHEETDB_URL}/search?sheet=Responses&Registration+Number=${encodeURIComponent(reg)}`);
     const data=await resp.json();
     document.getElementById('checkingBox').style.display='none';
-    if(data.exists){
+    if(Array.isArray(data)&&data.length>0){
       document.getElementById('blockedBox').style.display='block';
       ['inp-name','inp-reg','inp-email'].forEach(id=>document.getElementById(id).disabled=false);
+      document.getElementById('startBtn').disabled=false;
       return;
     }
   }catch(e){
@@ -334,27 +334,41 @@ function submitTest(auto=false){
     <strong>Tab Switches:</strong> ${strikes}
     ${auto?'<br><strong style="color:var(--red)">Note: Test was auto-submitted.</strong>':''}
   `;
-  saveResult({action:'submit',timestamp:endTime,name:student.name,reg:student.reg,email:student.email,
-    score:`${correct}/${Q_PER_TEST}`,percentage:pct+'%',grade,
-    timeTaken:`${mins}m ${secs}s`,autoSubmit:auto?'Yes':'No',
-    tabSwitches:strikes>0?`Yes (${strikes})`:'No',startTime,endTime});
+  saveResult({
+    Timestamp:           new Date().toISOString(),
+    'Full Name':         student.name,
+    'Registration Number': student.reg,
+    Email:               student.email,
+    Score:               `${correct}/${Q_PER_TEST}`,
+    Percentage:          pct+'%',
+    Grade:               grade,
+    'Time Taken':        `${mins}m ${secs}s`,
+    'Auto-Submitted':    auto?'Yes':'No',
+    'Tab Switches':      strikes>0?`Yes (${strikes})`:'No',
+    'Test Start Time':   startTime,
+    'Test End Time':     endTime,
+  });
 }
 
 async function saveResult(data){
   const msg=document.getElementById('savingMsg');
   try{
-    // GET requests have no CORS preflight issues with Google Apps Script.
-    // We encode all fields as URL parameters and use action=submit.
-    const params=new URLSearchParams();
-    params.append('action','submit');
-    Object.keys(data).forEach(k=>params.append(k,data[k]));
-    const url=`${WEBAPP_URL}?${params.toString()}`;
-    await fetch(url,{method:'GET',mode:'no-cors'});
-    msg.textContent='✅ Your result has been saved. You may close this tab.';
-    msg.style.color='#15803D';
+    const resp=await fetch(SHEETDB_URL,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({data:[data],sheet:'Responses'}),
+    });
+    const result=await resp.json();
+    if(result.created){
+      msg.textContent='✅ Your result has been saved. You may close this tab.';
+      msg.style.color='#15803D';
+    } else {
+      throw new Error('Not created');
+    }
   }catch(e){
     msg.textContent='⚠️ Could not save automatically. Please screenshot this page and email it to your lecturer.';
     msg.style.color='#B45309';
+    console.error(e);
   }
 }
 </script>
